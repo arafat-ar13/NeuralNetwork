@@ -123,6 +123,20 @@ class NeuralNetwork:
                 print(f"Neuron Weights: {neuron.weights}. Bias: {neuron.bias}")
             print("\n")
 
+    def save_model(self, filename):
+        """Method to save the model to a file"""
+
+        # Checking is directory exists
+        if not os.path.exists(self.MODEL_SAVE_PATH):
+            os.makedirs(self.MODEL_SAVE_PATH)
+
+        filepath = os.path.join(self.MODEL_SAVE_PATH, f"{filename}.pkl")
+
+        with open(filepath, 'wb') as file:
+            pickle.dump(self, file)
+
+        print(f"Model saved successfully to {filepath}!")
+
     def forward(self, inputs):
         """Feedforward that propagates to all the layers in the network"""
         layer_inputs = inputs

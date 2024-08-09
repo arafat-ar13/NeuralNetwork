@@ -94,3 +94,24 @@ def load_mnist_data(data_dir: str) -> Tuple[np.ndarray, np.ndarray, np.ndarray, 
 
     return X_train, y_train, X_test, y_test
 
+def load_model(filename: str, dir: str = "models") -> object:
+    """
+    Loads a model from a file.
+
+    Parameters:
+    filename (str): Name of the file containing the model.
+    dir (str): Directory containing the model file. By default, it is "models".
+
+    Returns:
+    object: The loaded model.
+
+    Example:
+    >>> model = load_model("mnist_model", "models")
+    """
+
+    filepath = os.path.join(dir, f"{filename}.pkl")
+
+    with open(filepath, 'rb') as file:
+        model = pickle.load(file)
+
+    return model
