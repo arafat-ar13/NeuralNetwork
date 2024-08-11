@@ -4,6 +4,8 @@ from functions import load_model
 from modify_nn import increase_output_neurons
 from PIL import Image
 
+from quickdraw import QuickDrawData
+
 import random
 
 # # Loading in the data
@@ -42,53 +44,49 @@ import random
 
 # new_nn = increase_output_neurons(nn, 7)
 
-class_names = ["bees", "cats", "bananas", "flowers", "hand", "ice cream", "microphone"]
+# class_names = ["bees", "cats", "bananas", "flowers", "hand", "ice cream", "microphone"]
+class_names = QuickDrawData().drawing_names
+data_dir = "data/quickdraw"
 
-# data_dir = "data/quickdraw"
-
-# data = []
-# labels = []
+data = []
+labels = []
 
 
-# # # iterate over all the images and save them and their labels
-# for name in class_names:
-#     counter = 0
-#     images = os.listdir(f"{data_dir}/{name}")
-#     if name in ["bees", "cats", "bananas"]:
-#         random.shuffle(images)
+# # iterate over all the images and save them and their labels
+for name in class_names:
+    images = os.listdir(f"{data_dir}/{name}")
     
-#     for image in images:
-#         img = Image.open(f"{data_dir}/{name}/{image}")
+    for image in images:
+        img = Image.open(f"{data_dir}/{name}/{image}")
 
-#         # greyscale it
-#         img = img.convert('L')
+        # greyscale it
+        img = img.convert('L')
 
-#         # normalize it
-#         img = np.array(img) / 255
+        # normalize it
+        img = np.array(img) / 255
 
-#         # reshape it
-#         img = img.reshape(1, -1)
+        # reshape it
+        img = img.reshape(1, -1)
 
-#         data.append(img)
+        data.append(img)
 
-#         label = np.zeros(len(class_names))
-#         label[class_names.index(name)] = 1
-#         labels.append(label)
-#         counter += 1
-
-#         if name in ["bees", "cats", "bananas"]:
-#             if counter == 500:
-#                 break
+        label = np.zeros(len(class_names))
+        label[class_names.index(name)] = 1
+        labels.append(label)
 
 # # print(data)
 # # print(labels)
 
-# data = np.array(data)
-# data = np.vstack(data)
-# labels = np.array(labels)
+data = np.array(data)
+data = np.vstack(data)
+labels = np.array(labels)
 
 # # print(data.shape)
 # # print(labels.shape)
+
+nn = NeuralNetwork(data.shape[1], 5, 11, labels.shape[1], 0.001)
+nn.train(data, labels, 1000, 0.001, batch_size=32)
+nn.save_model("quickdraw_model_new")
 # new_nn.train(data, labels, 150, 0.001, 32)
 # new_nn.save_model("new_quickdraw")
 
@@ -104,16 +102,16 @@ class_names = ["bees", "cats", "bananas", "flowers", "hand", "ice cream", "micro
 
 # class_names = ["bees", "cats", "bananas", "flower"]
 
-nn: NeuralNetwork = load_model("new_quickdraw")
+# nn: NeuralNetwork = load_model("new_quickdraw")
 
-new_image = Image.open("image.png")
-#
-new_image = new_image.resize((28, 28)).convert("L")
-new_image = np.array(new_image) / 255
-new_image = new_image.reshape(-1)
-# new_image = (np.array(new_image.convert('L'))).reshape(-1) / 255
+# new_image = Image.open("image.png")
+# #
+# new_image = new_image.resize((28, 28)).convert("L")
+# new_image = np.array(new_image) / 255
+# new_image = new_image.reshape(-1)
+# # new_image = (np.array(new_image.convert('L'))).reshape(-1) / 255
 
-np.set_printoptions(suppress=True, precision=10)
-prediction = nn.forward(new_image)
-print(class_names[list(prediction).index(np.max(prediction))])
-print(prediction)
+# np.set_printoptions(suppress=True, precision=10)
+# prediction = nn.forward(new_image)
+# print(class_names[list(prediction).index(np.max(prediction))])
+# print(prediction)
