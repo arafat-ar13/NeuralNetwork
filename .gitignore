@@ -165,3 +165,4 @@ data/
 models/
 Pipfile
 Pipfile.lock
+.quickdrawcache/

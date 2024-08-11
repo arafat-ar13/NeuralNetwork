@@ -106,6 +106,7 @@ class NeuralNetwork:
         self.num_hidden_layers = num_hidden_layers
         self.num_hidden_layer_neurons = num_hidden_layer_neurons
         self.num_output_layer_neurons = num_output_layer_neurons
+        self.l2_lambda = l2_lambda
         self.layers = []
         input_size = num_inputs
 
@@ -116,7 +117,7 @@ class NeuralNetwork:
             input_size = self.num_hidden_layer_neurons
 
         output_layer = Layer(num_inputs=input_size, num_neurons=num_output_layer_neurons, 
-                             activation_function="softmax", l2_lambda=l2_lambda)
+                             activation_function="softmax", l2_lambda=self.l2_lambda)
         self.layers.append(output_layer)
 
     def print_info(self):
@@ -186,3 +187,92 @@ class NeuralNetwork:
 
             average_loss = total_loss / (num_samples / batch_size)
             print(f'Epoch {epoch+1}/{epochs}, Loss: {average_loss:.4f}')
+
+# class_names = ["bees", "cats", "bananas"]
+
+# data_dir = "data/quickdraw/"
+
+# data = []
+# labels = []
+
+# for name in class_names:
+#     images = os.listdir(f"{data_dir}/{name}")
+
+#     # iterate over all the images and save them and their labels
+#     for image in images:
+#         img = Image.open(f"{data_dir}/{name}/{image}")
+
+#         # greyscale it
+#         img = img.convert('L')
+
+#         # normalize it
+#         img = np.array(img) / 255
+
+#         # reshape it
+#         img = img.reshape(1, -1)
+
+#         data.append(img)
+
+#         label = np.zeros(len(class_names))
+#         label[class_names.index(name)] = 1
+#         labels.append(label)
+
+# data = np.array(data)
+# data = np.vstack(data)
+# labels = np.array(labels)
+
+# nn = NeuralNetwork(data.shape[1], 5, 11, labels.shape[1], 0.001)
+# nn.train(data, labels, 380, 0.001, batch_size=32)
+# nn.save_model("quickdraw_model")
+# nn: NeuralNetwork = load_model("quickdraw_model")
+
+# # # new_image = Image.open("data/quickdraw/bananas/bananas802.png")
+# # # new_image = Image.open("data/banana.png")
+# new_image = Image.open("image.png")
+# #
+# new_image = new_image.resize((28, 28)).convert("L")
+# new_image = np.array(new_image) / 255
+# new_image = new_image.reshape(-1)
+# # new_image = (np.array(new_image.convert('L'))).reshape(-1) / 255
+
+# np.set_printoptions(suppress=True, precision=10)
+# prediction = nn.forward(new_image)
+# print(class_names[list(prediction).index(np.max(prediction))])
+# print(prediction)
+
+# nn.print_info()
+
+# print(new_image.shape)
+
+# def preprocess_image(image_path):
+#     # Open the image
+#     img = Image.open(image_path).convert('L')  # Convert to grayscale
+
+#     # Resize the image to fit within 255x255 while maintaining aspect ratio
+#     img.thumbnail((255, 255), Image.Resampling.LANCZOS)
+
+#     # Create a new 255x255 canvas
+#     canvas = Image.new('L', (255, 255), color=255)  # White background
+
+#     # Calculate position to paste the resized image
+#     x_offset = (255 - img.width) // 2
+#     y_offset = (255 - img.height) // 2
+
+#     # Paste the resized image onto the canvas
+#     canvas.paste(img, (x_offset, y_offset))
+
+#     # Resize the canvas image to 28x28
+#     img_resized = canvas.resize((28, 28), Image.Resampling.LANCZOS)
+
+#     # Convert image to a numpy array
+#     img_array = np.array(img_resized)
+
+#     # Flatten the image array
+#     # img_flattened = img_array.flatten()
+
+#     # Normalize the pixel values
+#     img_normalized = img_array.reshape(-1) / 255.0
+
+#     return img_normalized
+
+# print(nn.forward(preprocess_image("cat_1.png")))

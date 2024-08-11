@@ -10,6 +10,24 @@ from typing import Tuple
 import numpy as np
 from mnist import MNIST
 
+def make_data_dirs(*dir_names: str, base_dir: str = "."):
+    """
+    Function to create directories.
+
+    Parameters:
+    *dir_names (str): Variable number of directory names.
+    base_dir (str): Base directory where the directories will be created.
+
+    Returns:
+    None
+
+    Example:
+    >>> make_data_dirs("data", "models", "logs")
+    """
+    for dir_name in dir_names:
+        dir_path = os.path.join(base_dir, dir_name)
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
 
 def softmax(x: np.ndarray):
     """
