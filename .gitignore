@@ -163,6 +163,4 @@ cython_debug/
 
 data/
 models/
-Pipfile
-Pipfile.lock
 .quickdrawcache/
